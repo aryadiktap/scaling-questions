@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raport evoluție — Scaling Questions</title>
+<style>
+:root{--paper:#FAF7EF;--bg:#EDE8DC;--ink:#1F1B14;--muted:#6B6558;--rule:#D6CFBF;--primary:#254F4A;--accent:#C34A24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+.page{max-width:60rem;margin:0 auto;padding:1rem .75rem 4rem}
+.card{background:var(--paper);border:1px solid var(--rule);padding:1.25rem;margin-bottom:1rem}
+h1{font:600 1.7rem Georgia,serif;margin:.2rem 0}
+h2{font:600 1.15rem Georgia,serif;margin:0 0 .75rem}
+.demo{background:#F5E3D9;border:1px solid var(--accent);padding:.6rem .8rem;font-size:.9rem;margin:.75rem 0 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.6rem}
+.kpi{border:1px solid var(--rule);background:#FFFDF7;padding:.8rem;text-align:center}
+.kpi b{display:block;font:600 1.8rem Georgia,serif;color:var(--primary)}
+.kpi span{font-size:.8rem;color:var(--muted)}
+select{font:1rem system-ui;padding:.5rem;border:1px solid #B8B0A0;background:#FFFDF7;width:100%}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:.8rem;font-size:.85rem;margin-top:.5rem}
+.legend i{display:inline-block;width:.8rem;height:.8rem;border-radius:2px;margin-right:.3rem;vertical-align:-1px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{padding:.45rem .5rem;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+td.n{text-align:center;white-space:nowrap}
+.pos{color:#1D6B3A;font-weight:600}.zero{color:var(--muted)}.neg{color:#8B3A1A;font-weight:600}
+.wrap{overflow-x:auto}
+</style></head><body><div class="page">
+<div class="card">
+<p style="margin:0;font-size:.85rem;color:var(--muted)">Master NLP — Scaling Questions</p>
+<h1>Raport de evoluție</h1>
+<p style="margin:.2rem 0 0;color:var(--muted)">Scorurile înainte și după fiecare evaluare, pe persoană și pe grup.</p>
+<div class="demo"><b>Date demonstrative.</b> Scorurile din acest raport sunt simulate pentru prezentare, nu sunt rezultate reale de evaluare.</div>
+</div>
+
+<div class="card"><div class="kpis" id="kpis"></div></div>
+
+<div class="card">
+<h2>Evoluția pe persoană</h2>
+<select id="who"></select>
+<svg class="chart" id="chart" viewBox="0 0 640 300" role="img" aria-label="Grafic evoluție"></svg>
+<div class="legend">
+<span><i style="background:#B8B0A0"></i>Scor înainte</span>
+<span><i style="background:#254F4A"></i>Scor după</span>
+<span><i style="background:#C34A24"></i>Media grupului (după)</span>
+</div>
+<div id="themes" style="margin-top:1rem;font-size:.9rem"></div>
+</div>
+
+<div class="card">
+<h2>Toate evaluările</h2>
+<div class="wrap"><table id="tbl"><thead><tr>
+<th>Data</th><th>Nume</th><th>Temă</th><th>Înainte</th><th>După</th><th>Diferență</th><th>Observații</th>
+</tr></thead><tbody></tbody></table></div>
+</div>
+</div>
+
+<script>
+const DATA = [{"data": "2026-08-13", "nume": "Cosmin", "tip": "Individuală (neasistat)", "tema": "Prioritizarea clienților și încărcarea cu abonamente", "ev": 1, "pre": 3, "post": 4, "dif": 1, "obs": "Listă clară de clienți activi"}, {"data": "2026-09-10", "nume": "Cosmin", "tip": "Individuală (neasistat)", "tema": "Prioritizarea clienților și încărcarea cu abonamente", "ev": 2, "pre": 4, "post": 6, "dif": 2, "obs": "Redus abonamente nefolosite"}, {"data": "2026-10-08", "nume": "Cosmin", "tip": "Individuală (neasistat)", "tema": "Prioritizarea clienților și încărcarea cu abonamente", "ev": 3, "pre": 5, "post": 6, "dif": 1, "obs": "Mai mult focus pe venit"}, {"data": "2026-11-05", "nume": "Cosmin", "tip": "Individuală (neasistat)", "tema": "Prioritizarea clienților și încărcarea cu abonamente", "ev": 4, "pre": 6, "post": 8, "dif": 2, "obs": "Oferte trimise la timp"}, {"data": "2026-08-13", "nume": "Liliana", "tip": "Individuală (neasistat)", "tema": "Stresul de a avea grijă de fostul iubit internat la ATI", "ev": 1, "pre": 1, "post": 3, "dif": 2, "obs": "Perioadă critică, a găsit un singur pas mic"}, {"data": "2026-09-10", "nume": "Liliana", "tip": "Individuală (neasistat)", "tema": "Vinovăția și îndoiala dacă face destul pentru el", "ev": 2, "pre": 3, "post": 4, "dif": 1, "obs": "Progres lent, drumuri dese la spital"}, {"data": "2026-10-08", "nume": "Liliana", "tip": "Individuală (neasistat)", "tema": "Oboseala și somnul rupt din cauza drumurilor la spital", "ev": 3, "pre": 3, "post": 3, "dif": 0, "obs": "Săptămână grea, scor neschimbat"}, {"data": "2026-11-05", "nume": "Liliana", "tip": "Individuală (neasistat)", "tema": "Timp de refacere pentru ea, fără să se simtă egoistă", "ev": 4, "pre": 4, "post": 6, "dif": 2, "obs": "Și-a permis pauze, se așază treptat"}, {"data": "2026-08-27", "nume": "Loredana", "tip": "Individuală (neasistat)", "tema": "Încredere în sine în prezentări", "ev": 1, "pre": 2, "post": 3, "dif": 1, "obs": "Emoție mare, pas mic făcut"}, {"data": "2026-09-24", "nume": "Loredana", "tip": "Individuală (neasistat)", "tema": "Încredere în sine în prezentări", "ev": 2, "pre": 3, "post": 5, "dif": 2, "obs": "A exersat în fața unui prieten"}, {"data": "2026-10-22", "nume": "Loredana", "tip": "Individuală (neasistat)", "tema": "Încredere în sine în prezentări", "ev": 3, "pre": 5, "post": 7, "dif": 2, "obs": "Prezentare reușită în echipă"}, {"data": "2026-08-13", "nume": "Ramona", "tip": "Individuală (neasistat)", "tema": "Încrederea în sine ca mamă: \"nu sunt suficient de bună pentru fetița mea\"", "ev": 1, "pre": 3, "post": 4, "dif": 1, "obs": "Vinovăție mare, a găsit un lucru bun făcut azi"}, {"data": "2026-09-10", "nume": "Ramona", "tip": "Individuală (neasistat)", "tema": "Sentimentul că nu e suficient de bună la locul de muncă", "ev": 2, "pre": 3, "post": 5, "dif": 2, "obs": "A observat realizările din ultima lună"}, {"data": "2026-10-08", "nume": "Ramona", "tip": "Individuală (neasistat)", "tema": "Nu se poate relaxa, lucrează tot timpul", "ev": 3, "pre": 4, "post": 5, "dif": 1, "obs": "Progres mic, o seară fără laptop"}, {"data": "2026-11-05", "nume": "Ramona", "tip": "Individuală (neasistat)", "tema": "Anxietate și somn slab, nu poate dormi noaptea", "ev": 4, "pre": 4, "post": 6, "dif": 2, "obs": "Rutină de somnă slab, adoarme mai ușor"}];
+const $ = id => document.getElementById(id);
+const names = [...new Set(DATA.map(d=>d.nume))];
+const avg = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : 0;
+const fmt = n => (Math.round(n*10)/10).toString().replace('.',',');
+const fmtDate = s => { const [y,m,d]=s.split('-'); return d+'.'+m+'.'+y; };
+
+const perPerson = names.map(n => {
+  const r = DATA.filter(d=>d.nume===n).sort((a,b)=>a.data.localeCompare(b.data));
+  return {n, first:r[0].pre, last:r[r.length-1].post, count:r.length};
+});
+$('kpis').innerHTML = [
+  [names.length,'persoane'],
+  [DATA.length,'evaluări'],
+  ['+'+fmt(avg(DATA.map(d=>d.dif))),'creștere medie / evaluare'],
+  ['+'+fmt(avg(perPerson.map(p=>p.last-p.first))),'creștere medie totală / persoană']
+].map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('');
+
+$('who').innerHTML = '<option value="__all">Toți (media grupului)</option>' + names.map(n=>`<option>${n}</option>`).join('');
+
+const dates = [...new Set(DATA.map(d=>d.data))].sort();
+function groupAvgPost(){
+  return dates.map(dt => { const v = DATA.filter(d=>d.data===dt).map(d=>d.post); return v.length ? {dt, v:avg(v)} : null; }).filter(Boolean);
+}
+
+function draw(){
+  const who = $('who').value;
+  const svg = $('chart'); const W=640,H=300,L=40,R=20,T=20,B=50;
+  const pw=W-L-R, ph=H-T-B;
+  let rows, xs;
+  if (who==='__all') {
+    xs = dates;
+    rows = dates.map(dt => { const r=DATA.filter(d=>d.data===dt); return {dt, pre:avg(r.map(x=>x.pre)), post:avg(r.map(x=>x.post))}; });
+  } else {
+    const r = DATA.filter(d=>d.nume===who).sort((a,b)=>a.data.localeCompare(b.data));
+    xs = r.map(d=>d.data);
+    rows = r.map(d=>({dt:d.data, pre:d.pre, post:d.post}));
+  }
+  const X = i => L + (xs.length===1 ? pw/2 : i*pw/(xs.length-1));
+  const Y = v => T + ph - v*ph/10;
+  let s = '';
+  for (let v=0; v<=10; v+=2) s += `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#D6CFBF" stroke-width="1"/><text x="${L-8}" y="${Y(v)+4}" font-size="11" fill="#6B6558" text-anchor="end">${v}</text>`;
+  const poly = (key,color,dash) => {
+    const pts = rows.map((r,i)=>`${X(i)},${Y(r[key])}`).join(' ');
+    return `<polyline fill="none" stroke="${color}" stroke-width="2.5" ${dash?'stroke-dasharray="5 4"':''} points="${pts}"/>` +
+      rows.map((r,i)=>`<circle cx="${X(i)}" cy="${Y(r[key])}" r="4.5" fill="${color}"/><text x="${X(i)}" y="${Y(r[key])-9}" font-size="11" fill="${color}" text-anchor="middle">${fmt(r[key])}</text>`).join('');
+  };
+  if (who!=='__all') {
+    const g = groupAvgPost().filter(x=>xs.includes(x.dt));
+    if (g.length) s += `<polyline fill="none" stroke="#C34A24" stroke-width="2" stroke-dasharray="3 4" points="${g.map(x=>`${X(xs.indexOf(x.dt))},${Y(x.v)}`).join(' ')}"/>`;
+  }
+  s += poly('pre','#B8B0A0',false) + poly('post','#254F4A',false);
+  s += xs.map((dt,i)=>`<text x="${X(i)}" y="${H-22}" font-size="11" fill="#6B6558" text-anchor="middle">${fmtDate(dt).slice(0,5)}</text>`).join('');
+  s += `<text x="${W/2}" y="${H-5}" font-size="11" fill="#6B6558" text-anchor="middle">Data evaluării</text>`;
+  svg.innerHTML = s;
+
+  const t = $('themes');
+  if (who==='__all') t.innerHTML = '';
+  else {
+    const r = DATA.filter(d=>d.nume===who).sort((a,b)=>a.data.localeCompare(b.data));
+    t.innerHTML = '<b>Teme lucrate:</b><ol style="margin:.4rem 0 0;padding-left:1.2rem">' + r.map(d=>`<li>${fmtDate(d.data)} — ${d.tema} <span style="color:#6B6558">(${d.pre} → ${d.post})</span></li>`).join('') + '</ol>';
+  }
+}
+$('who').onchange = draw; draw();
+
+const rowsSorted = [...DATA].sort((a,b)=>a.nume.localeCompare(b.nume)||a.data.localeCompare(b.data));
+document.querySelector('#tbl tbody').innerHTML = rowsSorted.map(d=>{
+  const c = d.dif>0?'pos':d.dif<0?'neg':'zero';
+  return `<tr><td>${fmtDate(d.data)}</td><td>${d.nume}</td><td>${d.tema}</td><td class="n">${d.pre}</td><td class="n">${d.post}</td><td class="n ${c}">${d.dif>0?'+':''}${d.dif}</td><td>${d.obs}</td></tr>`;
+}).join('');
+</script></body></html>

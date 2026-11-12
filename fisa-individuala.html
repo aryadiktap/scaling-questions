@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fișă de lucru — Scaling Questions</title>
+<style>
+:root{--paper:#FAF7EF;--bg:#EDE8DC;--ink:#1F1B14;--muted:#6B6558;--rule:#D6CFBF;--primary:#254F4A;--soft:#E4EBE8;--accent:#C34A24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Georgia,'Times New Roman',serif}
+.page{max-width:46rem;margin:0 auto;padding:1rem .75rem 5rem}
+.paper{background:var(--paper);border:1px solid var(--rule);padding:1.75rem 1.25rem}
+h1{font-size:1.9rem;line-height:1.1;margin:.2rem 0 .4rem}
+.sub{color:var(--muted);font-style:italic;margin:0 0 1.5rem}
+h2{font-size:1.25rem;margin:2rem 0 .75rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
+label{display:block;font:500 .95rem system-ui,sans-serif;color:var(--muted);margin:1rem 0 .35rem}
+input,textarea,select{width:100%;font:1rem system-ui,sans-serif;padding:.7rem;border:1px solid #B8B0A0;background:#FFFDF7;color:var(--ink);border-radius:4px}
+textarea{min-height:5rem;resize:vertical}
+.scores{display:grid;grid-template-columns:repeat(11,1fr);gap:.25rem}
+.scores button{aspect-ratio:1;border:1px solid #B8B0A0;background:#FFFDF7;font:1.05rem system-ui,sans-serif;border-radius:4px;padding:0;min-height:2.3rem}
+.scores button.sel{background:var(--primary);color:#fff;border-color:var(--primary)}
+.legend{display:flex;justify-content:space-between;font:.75rem system-ui;color:var(--muted);margin-top:.3rem}
+.diff{margin:1.5rem 0;padding:1.25rem;text-align:center;border:1px solid #B8B0A0;background:#FFFDF7}
+.diff.on{border-color:var(--accent);background:#F5E3D9}
+.diff .n{font-size:3rem;line-height:1}
+.diff .l{font:.8rem system-ui;color:var(--muted)}
+.q{font-style:italic;border-left:3px solid var(--primary);padding-left:.8rem;margin:.5rem 0 1rem}
+.send{width:100%;margin-top:2rem;padding:1rem;font:600 1.05rem system-ui,sans-serif;background:var(--primary);color:#fff;border:0;border-radius:6px}
+.send:disabled{opacity:.5}
+.msg{margin-top:1rem;padding:.8rem;border-radius:6px;font:.95rem system-ui,sans-serif;display:none}
+.msg.ok{display:block;background:#E4EBE8;color:#1D403C}
+.msg.err{display:block;background:#F5E3D9;color:#8B3A1A}
+.ghost{background:none;border:0;color:var(--muted);text-decoration:underline;font:.9rem system-ui;margin-top:1rem;padding:0}
+</style>
+</head>
+<body>
+<div class="page"><div class="paper">
+<p style="font:.85rem system-ui;color:var(--muted);margin:0">Master NLP — Evaluare individuală (neasistat)</p>
+<h1>Fișă de lucru — Scaling Questions</h1>
+<p class="sub">Varianta individuală: aplici tehnica singur/ă, fără facilitator.</p>
+
+<label for="nume">Numele tău</label>
+<input id="nume" autocomplete="off">
+<label for="data">Data</label>
+<input id="data" type="date">
+<label for="tema">Tema pe care o lucrezi</label>
+<input id="tema" autocomplete="off" placeholder="ex: gestionarea stresului la serviciu">
+
+<h2>1. Scala ta</h2>
+<label for="zero">0 înseamnă…</label>
+<textarea id="zero" placeholder="ex: gândurile limitative sunt foarte puternice"></textarea>
+<label for="zece">10 înseamnă…</label>
+<textarea id="zece" placeholder="ex: mă simt complet liber/ă și încrezător/oare"></textarea>
+
+<h2>2. Înainte de exercițiu</h2>
+<p class="q">„Unde te situezi acum, pe scala de la 0 la 10, în legătură cu această temă?"</p>
+<div class="scores" id="pre"></div>
+<div class="legend"><span>0</span><span>10</span></div>
+<label for="q1">Ce te face să fii la acest scor și nu mai jos?</label>
+<textarea id="q1"></textarea>
+
+<h2>3. Exercițiul</h2>
+<label for="tehnica">Ce tehnică / exercițiu NLP ai aplicat?</label>
+<textarea id="tehnica"></textarea>
+
+<h2>4. După exercițiu</h2>
+<p class="q">„Pe aceeași scală, unde te situezi acum, după exercițiu?"</p>
+<div class="scores" id="post"></div>
+<div class="legend"><span>0</span><span>10</span></div>
+<div class="diff" id="diff"><div class="n" id="dn">—</div><div class="l">diferența de scor</div></div>
+<label for="q2">Ce s-a schimbat în gândirea ta?</label>
+<textarea id="q2"></textarea>
+<label for="q3">Ce mic pas te-ar mai urca un punct?</label>
+<textarea id="q3"></textarea>
+
+<button class="send" id="send">Trimite în baza de date</button>
+<div class="msg" id="msg"></div>
+<button class="ghost" id="reset">Fișă nouă (șterge ce e completat)</button>
+</div></div>
+
+<script>
+const WEBHOOK = "https://hook.us2.make.com/bedgsnh51farf64r4ts7taax13j9h5aq";
+const TIP = "Evaluare individuală (neasistat)";
+const KEY = "scaling-solo-v1";
+const st = {pre:null, post:null};
+const $ = id => document.getElementById(id);
+const fields = ['nume','data','tema','zero','zece','q1','tehnica','q2','q3'];
+
+['pre','post'].forEach(k => {
+  for (let i=0;i<=10;i++) {
+    const b = document.createElement('button');
+    b.type='button'; b.textContent=i;
+    b.onclick = () => { st[k]=i; paint(); save(); };
+    $(k).appendChild(b);
+  }
+});
+
+function paint() {
+  ['pre','post'].forEach(k => [...$(k).children].forEach((b,i)=>b.classList.toggle('sel', st[k]===i)));
+  const d = $('diff');
+  if (st.pre!==null && st.post!==null) {
+    const v = st.post-st.pre;
+    $('dn').textContent = (v>0?'+':'')+v; d.classList.add('on');
+  } else { $('dn').textContent='—'; d.classList.remove('on'); }
+}
+
+function save() {
+  const o = {...st}; fields.forEach(f => o[f]=$(f).value);
+  try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e) {}
+}
+function load() {
+  try {
+    const o = JSON.parse(localStorage.getItem(KEY)||'null'); if(!o) return;
+    st.pre=o.pre; st.post=o.post; fields.forEach(f => { if(o[f]!==undefined) $(f).value=o[f]; });
+  } catch(e) {}
+}
+fields.forEach(f => $(f).addEventListener('input', save));
+$('data').value = new Date().toISOString().slice(0,10);
+load(); paint();
+
+function show(t, cls) { const m=$('msg'); m.className='msg '+cls; m.textContent=t; }
+
+$('send').onclick = async () => {
+  if (!$('nume').value.trim()) return show('Scrie numele tău înainte de trimitere.', 'err');
+  if (!$('tema').value.trim()) return show('Scrie tema pe care o lucrezi.', 'err');
+  if (st.pre===null || st.post===null) return show('Alege atât scorul de înainte, cât și cel de după.', 'err');
+  const obs = [$('q2').value.trim(), $('q3').value.trim() && ('Următorul pas: '+$('q3').value.trim())].filter(Boolean).join(' | ');
+  const payload = {
+    data: $('data').value, nume: $('nume').value.trim(), tip: TIP,
+    tema: $('tema').value.trim(), evaluare: '',
+    pre: st.pre, post: st.post, diferenta: st.post-st.pre, observatii: obs
+  };
+  $('send').disabled = true; show('Se trimite…', 'ok');
+  try {
+    await fetch(WEBHOOK, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(payload).toString() });
+    show('Trimis. Rezultatul apare în foaia Google în cel mult 15 minute.', 'ok');
+    localStorage.removeItem(KEY);
+  } catch(e) {
+    show('Nu s-a putut trimite. Verifică internetul și încearcă din nou. Datele rămân salvate pe telefon.', 'err');
+  }
+  $('send').disabled = false;
+};
+
+$('reset').onclick = () => {
+  if (!confirm('Ștergi tot ce ai completat în fișa asta?')) return;
+  localStorage.removeItem(KEY); location.reload();
+};
+</script>
+</body></html>
