@@ -39,8 +39,23 @@ h2{font:600 1.15rem Georgia,serif;margin:0 0 .6rem}
 .bar .n{width:1.5rem;font-weight:600;text-align:right}
 .person{margin-bottom:1.2rem}
 .fb .q{font-style:italic;color:#254F4A;margin:.9rem 0 .2rem}
-.fisa summary{position:relative}.open-btn{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:999px;border:1.5px solid #254F4A;color:#254F4A;background:#E4EBE8;text-decoration:none;white-space:nowrap;z-index:2}
-.open-btn:hover{background:#254F4A;color:#FAF7EF}
+.btn-open{
+  display:block;
+  width:fit-content;
+  margin:1.25rem 0 0 auto;
+  padding:.5rem 1.25rem;
+  font-size:.8125rem;
+  font-weight:600;
+  letter-spacing:.03em;
+  color:#254F4A;
+  background:rgba(37,79,74,.08);
+  border:1px solid rgba(37,79,74,.25);
+  border-radius:999px;
+  text-decoration:none;
+  backdrop-filter:blur(4px);
+  transition:background .15s,border-color .15s,color .15s;
+}
+.btn-open:hover{background:#254F4A;color:#FAF7EF;border-color:#254F4A}
 </style></head><body><div class="page">
 <div class="card">
 <p class="muted" style="margin:0;font-size:.82rem">Master NLP — Scaling Questions</p>
@@ -93,7 +108,6 @@ function fisa(r){
   return `<details class="fisa"><summary>
     <div><div class="d">Evaluarea ${r.ev} · ${fd(r.data)}</div><div class="t">${esc(r.tema)}</div></div>
     <div><div class="sc">${r.pre} → ${r.post}</div><div class="df ${c}">${r.dif>0?'+':''}${r.dif}</div></div>
-  <a class="open-btn" href="fisa-${r.nume.toLowerCase().replace(/ /g,'-')}-${r.ev}.html">Deschide fișa →</a>
   </summary><div class="fb">
     <h3>1. Contextul exercițiului</h3>
     <p><b>Situația:</b> ${esc(r.ctx)}</p><p><b>Obiectivul:</b> ${esc(r.obj)}</p>
@@ -114,6 +128,7 @@ function fisa(r){
     <p><b>Ce s-a schimbat cel mai vizibil:</b> ${esc(r.sinteza)}</p>
     <p><b>Resurse și insight-uri apărute:</b> ${esc(r.resurse)}</p>
     <p><b>De consolidat în sesiunile următoare:</b> ${esc(r.consolidare)}</p>
+    <a class="btn-open" href="fisa-${r.nume.toLowerCase().replace(/ /g,'-')}-${r.ev}.html">Deschide fișa completă →</a>
   </div></details>`;
 }
 
