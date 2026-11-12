@@ -39,6 +39,8 @@ h2{font:600 1.15rem Georgia,serif;margin:0 0 .6rem}
 .bar .n{width:1.5rem;font-weight:600;text-align:right}
 .person{margin-bottom:1.2rem}
 .fb .q{font-style:italic;color:#254F4A;margin:.9rem 0 .2rem}
+.fisa summary{position:relative}.open-btn{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:999px;border:1.5px solid #254F4A;color:#254F4A;background:#E4EBE8;text-decoration:none;white-space:nowrap;z-index:2}
+.open-btn:hover{background:#254F4A;color:#FAF7EF}
 </style></head><body><div class="page">
 <div class="card">
 <p class="muted" style="margin:0;font-size:.82rem">Master NLP — Scaling Questions</p>
@@ -91,6 +93,7 @@ function fisa(r){
   return `<details class="fisa"><summary>
     <div><div class="d">Evaluarea ${r.ev} · ${fd(r.data)}</div><div class="t">${esc(r.tema)}</div></div>
     <div><div class="sc">${r.pre} → ${r.post}</div><div class="df ${c}">${r.dif>0?'+':''}${r.dif}</div></div>
+  <a class="open-btn" href="fisa-${r.nume.toLowerCase().replace(/ /g,'-')}-${r.ev}.html">Deschide fișa →</a>
   </summary><div class="fb">
     <h3>1. Contextul exercițiului</h3>
     <p><b>Situația:</b> ${esc(r.ctx)}</p><p><b>Obiectivul:</b> ${esc(r.obj)}</p>
