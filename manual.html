@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Manual de utilizare — Scaling Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF7EF;--page-bg:#EDE8DC;--ink:#1F1B14;--muted:#6B6558;
+  --rule:#D6CFBF;--rule-s:#B8B0A0;--primary:#254F4A;--ph:#1D403C;
+  --soft:#E4EBE8;--accent:#C34A24;--accent-soft:#F5E3D9;
+  --font-d:'Fraunces',Georgia,serif;--font-b:'Inter',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--page-bg);color:var(--ink);font-family:var(--font-b);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.wrap{max-width:48rem;margin:0 auto;padding:2.5rem 1.25rem 6rem}
+@media(max-width:600px){.wrap{padding:1rem .75rem 5rem}}
+
+/* nav */
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.875rem;font-weight:500;color:var(--primary);text-decoration:none;padding:.4rem .9rem;border:1px solid var(--primary);border-radius:999px;background:var(--soft);margin-bottom:2rem}
+.back:hover{background:var(--primary);color:var(--paper)}
+
+/* hero */
+.hero{background:var(--paper);border:1px solid var(--rule);padding:3rem 2.5rem 2.5rem;margin-bottom:1.5rem}
+@media(max-width:600px){.hero{padding:1.75rem 1.25rem}}
+.eyebrow{font-size:.8125rem;font-weight:600;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.hero h1{font-family:var(--font-d);font-variation-settings:'SOFT' 20,'opsz' 60,'wght' 500;font-size:clamp(2rem,6vw,2.75rem);line-height:1.05;color:var(--primary);margin-bottom:.75rem}
+.hero .sub{font-family:var(--font-d);font-variation-settings:'SOFT' 40,'opsz' 24,'wght' 400;font-style:italic;font-size:1.0625rem;color:var(--muted);max-width:36rem}
+.toc{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:.5rem}
+.toc a{font-size:.8125rem;font-weight:500;color:var(--primary);text-decoration:none;padding:.3rem .75rem;border:1px solid var(--primary);border-radius:999px}
+.toc a:hover{background:var(--primary);color:var(--paper)}
+
+/* cards */
+.card{background:var(--paper);border:1px solid var(--rule);padding:2.5rem 2rem;margin-bottom:1.25rem}
+@media(max-width:600px){.card{padding:1.5rem 1rem}}
+.card h2{font-family:var(--font-d);font-variation-settings:'SOFT' 20,'opsz' 36,'wght' 500;font-size:1.625rem;color:var(--primary);margin-bottom:.25rem}
+.card .lead{color:var(--muted);font-size:.9375rem;margin-bottom:1.5rem;line-height:1.5}
+.card h3{font-family:var(--font-d);font-variation-settings:'SOFT' 20,'opsz' 24,'wght' 500;font-size:1.125rem;color:var(--ink);margin:1.5rem 0 .5rem}
+.card p{font-size:.9375rem;color:var(--ink);margin-bottom:.75rem;line-height:1.65}
+.card ul,.card ol{padding-left:1.25rem;margin:.5rem 0 .75rem}
+.card li{font-size:.9375rem;margin-bottom:.4rem;line-height:1.6}
+.card strong{color:var(--primary)}
+
+/* quote */
+.quote{border-left:3px solid var(--primary);padding:.5rem 0 .5rem 1.25rem;margin:1.25rem 0;font-family:var(--font-d);font-variation-settings:'SOFT' 60,'opsz' 22,'wght' 400;font-style:italic;font-size:1.0625rem;color:var(--ink);line-height:1.45}
+.quote cite{display:block;font-size:.8125rem;font-style:normal;color:var(--muted);margin-top:.4rem}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:0;margin:1.25rem 0}
+.step-row{display:grid;grid-template-columns:3rem 1fr;gap:1rem;padding:1.25rem 0;border-bottom:1px dotted var(--rule);align-items:start}
+.step-row:last-child{border-bottom:none}
+.step-num{font-family:var(--font-d);font-variation-settings:'SOFT' 20,'opsz' 60,'wght' 400;font-size:2.5rem;color:var(--primary);line-height:1}
+.step-body h4{font-weight:600;font-size:.9375rem;margin-bottom:.35rem;color:var(--ink)}
+.step-body p{font-size:.875rem;color:var(--muted);margin:0;line-height:1.55}
+.step-body .q-example{font-style:italic;color:var(--primary);font-size:.875rem;margin-top:.4rem}
+
+/* scale visual */
+.scale-vis{margin:1.25rem 0;position:relative}
+.scale-track{height:12px;background:linear-gradient(to right,#E8E4DC,var(--primary));border-radius:999px;position:relative}
+.scale-labels{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-top:.4rem;padding:0 .2rem}
+.scale-markers{display:flex;justify-content:space-between;margin-bottom:.4rem}
+.scale-markers span{font-size:.75rem;color:var(--muted);width:1.5rem;text-align:center}
+.scale-example{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+.scale-ex-box{flex:1;min-width:12rem;background:var(--page-bg);border:1px solid var(--rule);padding:.875rem 1rem;font-size:.8125rem}
+.scale-ex-box .n{font-family:var(--font-d);font-size:2rem;color:var(--primary);line-height:1;margin-bottom:.25rem}
+.scale-ex-box p{color:var(--muted);margin:0;line-height:1.5}
+
+/* diff visual */
+.diff-vis{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;flex-wrap:wrap}
+.diff-score{font-family:var(--font-d);font-variation-settings:'SOFT' 20,'opsz' 72,'wght' 400;font-size:4rem;line-height:1;color:var(--ink)}
+.diff-score.after{color:var(--primary)}
+.diff-arrow{font-size:2rem;color:var(--muted)}
+.diff-change{font-family:var(--font-d);font-size:2.5rem;color:var(--accent);line-height:1}
+.diff-label{font-size:.75rem;color:var(--muted);letter-spacing:.05em;margin-top:.2rem}
+
+/* chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:.4rem;margin:.75rem 0}
+.chip{font-size:.8rem;font-weight:500;padding:.25rem .7rem;border-radius:999px;background:var(--soft);color:var(--primary);border:1px solid var(--rule-s)}
+
+/* tip box */
+.tip{background:var(--accent-soft);border-left:3px solid var(--accent);padding:.875rem 1.1rem;margin:1.25rem 0;font-size:.875rem;color:var(--ink);line-height:1.6}
+.tip strong{color:var(--accent)}
+
+/* flow diagram */
+.flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1.25rem 0;justify-content:center}
+.flow-box{background:var(--soft);border:1.5px solid var(--primary);padding:.6rem 1rem;border-radius:8px;font-size:.8125rem;font-weight:600;color:var(--primary);text-align:center;min-width:7rem}
+.flow-arr{font-size:1.25rem;color:var(--muted)}
+
+/* CTA */
+.cta-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.75rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;border-radius:999px;font-size:.9rem;font-weight:600;text-decoration:none;transition:background .15s,color .15s}
+.btn-primary{background:var(--primary);color:var(--paper)}
+.btn-primary:hover{background:var(--ph)}
+.btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-outline:hover{background:var(--primary);color:var(--paper)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="fise-completate.html" class="back">← Înapoi la fișe</a>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="eyebrow">Master NLP · Ghid de utilizare</p>
+  <h1>Manual Scaling Questions</h1>
+  <p class="sub">Cum funcționează metoda, cum se completează o fișă și cum se interpretează rezultatele — pentru participant și pentru facilitator.</p>
+  <div class="toc">
+    <a href="#ce-sunt">Ce sunt</a>
+    <a href="#scala">Scala 0–10</a>
+    <a href="#pasi">Pașii metodei</a>
+    <a href="#individual">Varianta individuală</a>
+    <a href="#asistat">Varianta asistată</a>
+    <a href="#interpretare">Interpretare</a>
+    <a href="#master">Cadru teoretic</a>
+  </div>
+</div>
+
+<!-- CE SUNT -->
+<div class="card" id="ce-sunt">
+  <h2>Ce sunt Scaling Questions?</h2>
+  <p class="lead">O tehnică solution-focused dezvoltată de Steve de Shazer și Insoo Kim Berg la Brief Family Therapy Center, Milwaukee, 1980s.</p>
+  <div class="quote">
+    „Pe o scală de la 0 la 10, unde 10 înseamnă că problema e complet rezolvată și 0 înseamnă cea mai gravă formă a ei, unde te situezi chiar acum?"
+    <cite>— Steve de Shazer, întrebarea fundamentală</cite>
+  </div>
+  <p>Scaling Questions nu măsoară o realitate obiectivă. Măsoară <strong>percepția persoanei</strong> asupra situației, înainte și după o intervenție. Diferența dintre cele două scoruri arată cât de mult s-a schimbat perspectiva.</p>
+  <h3>De ce funcționează</h3>
+  <ul>
+    <li>Transformă o problemă vagă într-o valoare numerică concretă</li>
+    <li>Pune accent pe <strong>ce funcționează deja</strong>, nu pe ce e greșit</li>
+    <li>Generează micro-obiective realiste: nu de la 2 la 10, ci de la 2 la 3</li>
+    <li>Crește motivația prin conștientizarea progresului</li>
+    <li>Se poate aplica singur sau cu facilitator</li>
+  </ul>
+  <div class="chip-row">
+    <span class="chip">Solution-focused</span>
+    <span class="chip">Steve de Shazer</span>
+    <span class="chip">Brief therapy</span>
+    <span class="chip">NLP</span>
+    <span class="chip">Auto-evaluare</span>
+  </div>
+</div>
+
+<!-- SCALA -->
+<div class="card" id="scala">
+  <h2>Cum funcționează scala</h2>
+  <p class="lead">Scala de la 0 la 10 este definită de participant, nu de facilitator. Același număr înseamnă altceva pentru fiecare persoană și fiecare temă.</p>
+
+  <div class="scale-vis">
+    <div class="scale-markers">
+      <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+    <div class="scale-track"></div>
+    <div class="scale-labels"><span>Cea mai gravă formă a problemei</span><span>Problema complet rezolvată</span></div>
+  </div>
+
+  <div class="scale-example">
+    <div class="scale-ex-box">
+      <div class="n">0</div>
+      <p>Definit de participant: cum arată situația la cel mai rău nivel posibil. Concret, cu imagini și senzații.</p>
+    </div>
+    <div class="scale-ex-box">
+      <div class="n">10</div>
+      <p>Definit de participant: cum arată situația când e complet rezolvată. Concret, cu imagini și senzații.</p>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Important:</strong> Nu există un scor corect sau greșit. Un 3 la începutul exercițiului și un 5 la final arată că perspectiva s-a schimbat cu 2 puncte — acesta este rezultatul.
+  </div>
+
+  <h3>Ce înseamnă diferența de scor</h3>
+  <div class="diff-vis">
+    <div><div class="diff-score">3</div><div class="diff-label">PRE</div></div>
+    <div class="diff-arrow">→</div>
+    <div><div class="diff-score after">6</div><div class="diff-label">POST</div></div>
+    <div style="padding-left:.5rem"><div class="diff-change">+3</div><div class="diff-label">diferența</div></div>
+  </div>
+  <p>O diferență de <strong>+1 sau +2 puncte</strong> într-o singură sesiune este un rezultat bun. Schimbarea de perspectivă, nu atingerea lui 10, este scopul exercițiului.</p>
+</div>
+
+<!-- PASI -->
+<div class="card" id="pasi">
+  <h2>Pașii metodei</h2>
+  <p class="lead">Indiferent de variantă — individuală sau asistată — metoda urmează aceeași structură în șapte pași.</p>
+
+  <div class="flow">
+    <div class="flow-box">1. Context</div>
+    <div class="flow-arr">→</div>
+    <div class="flow-box">2. Scala</div>
+    <div class="flow-arr">→</div>
+    <div class="flow-box">3. Scor PRE</div>
+    <div class="flow-arr">→</div>
+    <div class="flow-box">4. Tehnică NLP</div>
+    <div class="flow-arr">→</div>
+    <div class="flow-box">5. Scor POST</div>
+    <div class="flow-arr">→</div>
+    <div class="flow-box">6. Sinteză</div>
+  </div>
+
+  <div class="steps">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Definești contextul</h4>
+        <p>Descrie situația concretă pe care vrei să o lucrezi și ce vrei să obții din acest exercițiu.</p>
+        <p class="q-example">„Care este situația pe care vrei să o explorezi astăzi?"</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Definești scala</h4>
+        <p>Ancorezi concret ce înseamnă 0 și ce înseamnă 10 pentru această temă specifică. Cu imagini, senzații, comportamente.</p>
+        <p class="q-example">„Ce se întâmplă exact când ești la 0? Dar la 10?"</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Scorezi PRE</h4>
+        <p>Evaluezi unde te situezi acum, înainte de exercițiu. Răspunzi la două întrebări cheie.</p>
+        <p class="q-example">„Ce te face să fii la X și nu la un scor mai mic?" / „Ce ar însemna să urci un punct?"</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Aplici tehnica NLP</h4>
+        <p>Alegi o tehnică potrivită temei: reframing, ancorare, schimbare de submodalități, poziții perceptuale, timeline, vizualizare, swish.</p>
+        <p class="q-example">Durata recomandată: 5–15 minute.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Scorezi POST</h4>
+        <p>Evaluezi unde te situezi după exercițiu, pe aceeași scală. Răspunzi la trei întrebări cheie.</p>
+        <p class="q-example">„Ce s-a schimbat în gândirea ta?" / „Ce idee nouă ai acum?" / „Ce pas următor?"</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Sintetizezi</h4>
+        <p>Notezi ce s-a schimbat cel mai vizibil, ce resurse au apărut și ce trebuie consolidat în sesiunile următoare.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INDIVIDUAL -->
+<div class="card" id="individual">
+  <h2>Varianta individuală</h2>
+  <p class="lead">Fără facilitator. Persoana parcurge toți pașii singură, în ritmul ei, cu cronometru pentru tehnica NLP.</p>
+  <h3>Când se folosește</h3>
+  <ul>
+    <li>Practică personală, în afara sesiunilor</li>
+    <li>Auto-monitorizarea evoluției pe o temă</li>
+    <li>Colectarea datelor pentru cercetare sau prezentare</li>
+  </ul>
+  <h3>Cum se completează</h3>
+  <ol>
+    <li>Deschide fișa individuală și completează data și tema</li>
+    <li>Parcurge pașii 1–6 în ordinea din fișă</li>
+    <li>Pornește cronometrul când aplici tehnica NLP</li>
+    <li>La final, apasă <strong>Trimite în baza de date</strong> — datele se salvează automat</li>
+  </ol>
+  <div class="tip">
+    <strong>Timp estimat:</strong> 20–35 minute pentru o fișă completă, din care 5–15 minute pentru tehnica NLP.
+  </div>
+  <div class="cta-row">
+    <a href="fisa-individuala.html" class="btn btn-primary">Deschide fișa individuală →</a>
+  </div>
+</div>
+
+<!-- ASISTAT -->
+<div class="card" id="asistat">
+  <h2>Varianta asistată</h2>
+  <p class="lead">Cu facilitator. Facilitatorul pune întrebările, persoana răspunde și scorează. Facilitatorul completează fișa în timp real.</p>
+  <h3>Rolul facilitatorului</h3>
+  <ul>
+    <li>Pune întrebările din fișă exact cum sunt formulate</li>
+    <li>Nu interpretează și nu sugerează răspunsuri</li>
+    <li>Lasă persoana să definească scala în propriii termeni</li>
+    <li>Alege tehnica NLP împreună cu persoana</li>
+    <li>Notează răspunsurile și completează fișa</li>
+  </ul>
+  <h3>Întrebările cheie ale facilitatorului</h3>
+  <div class="steps">
+    <div class="step-row">
+      <div class="step-num" style="font-size:1.5rem">PRE</div>
+      <div class="step-body">
+        <p class="q-example">„Pe o scală de la 0 la 10, unde 0 e cea mai gravă formă și 10 e rezolvat complet, unde ești acum?"</p>
+        <p class="q-example">„Ce te face să fii la [scor] și nu la un scor mai mic?"</p>
+        <p class="q-example">„Ce ar însemna concret să urci un punct, de la [scor] la [scor+1]?"</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="font-size:1.5rem">POST</div>
+      <div class="step-body">
+        <p class="q-example">„Acum, pe aceeași scală, unde te situezi?"</p>
+        <p class="q-example">„Ce s-a schimbat în gândirea ta, astfel încât ești la [scor nou] și nu la [scor vechi]?"</p>
+        <p class="q-example">„Ce idee nouă sau perspectivă ai acum?"</p>
+        <p class="q-example">„Ce mic pas ar trebui să se întâmple ca să urci încă un punct?"</p>
+      </div>
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="fisa-asistata.html" class="btn btn-primary">Deschide fișa asistată →</a>
+  </div>
+</div>
+
+<!-- INTERPRETARE -->
+<div class="card" id="interpretare">
+  <h2>Cum se interpretează rezultatele</h2>
+  <p class="lead">Diferența PRE → POST nu este o notă. Este un indicator al schimbării de perspectivă produse de tehnica NLP.</p>
+  <h3>Ghid de interpretare</h3>
+  <div class="steps">
+    <div class="step-row">
+      <div class="step-num" style="font-size:1.5rem;color:var(--accent)">0</div>
+      <div class="step-body">
+        <h4>Scor neschimbat</h4>
+        <p>Tehnica nu a produs o schimbare vizibilă în această sesiune. Se recomandă o altă tehnică sau o reformulare a temei.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="font-size:1.5rem;color:#B8A000">+1 / +2</div>
+      <div class="step-body">
+        <h4>Schimbare moderată</h4>
+        <p>Rezultat tipic și bun pentru o singură sesiune. Perspectiva s-a schimbat, persoana are un pas concret.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="font-size:1.5rem;color:var(--primary)">+3 / +4</div>
+      <div class="step-body">
+        <h4>Schimbare semnificativă</h4>
+        <p>Tehnica a produs un impact puternic. Se recomandă consolidarea în sesiunile următoare.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tip">
+    <strong>Evoluția în timp</strong> este mai relevantă decât scorul dintr-o singură sesiune. Patru evaluări la interval de două săptămâni arată trendul real.
+  </div>
+</div>
+
+<!-- CADRU TEORETIC -->
+<div class="card" id="master">
+  <h2>Cadru teoretic — Master NLP</h2>
+  <p class="lead">Scaling Questions integrează elemente din terapia solution-focused și din NLP, combinând evaluarea numerică cu tehnicile de schimbare a perspectivei.</p>
+  <h3>Originea metodei</h3>
+  <p>Develop de <strong>Steve de Shazer</strong> și <strong>Insoo Kim Berg</strong> la Brief Family Therapy Center din Milwaukee în anii 1980, Scaling Questions face parte din arsenalul terapiei centrate pe soluții (Solution-Focused Brief Therapy — SFBT).</p>
+  <h3>Integrarea cu NLP</h3>
+  <p>În cadrul practicii NLP, Scaling Questions funcționează ca un instrument de calibrare înainte și după aplicarea tehnicilor. Ele oferă:</p>
+  <ul>
+    <li><strong>Ancorare numerică</strong> — transformă starea internă într-o valoare măsurabilă</li>
+    <li><strong>Direcție</strong> — „Ce ar însemna un punct în plus?" generează reprezentări interne ale schimbării dorite</li>
+    <li><strong>Dovadă a schimbării</strong> — scorul POST confirmă că tehnica a produs un efect</li>
+    <li><strong>Resurse existente</strong> — „Ce te face să nu fii la 0?" identifică resursele deja prezente</li>
+  </ul>
+  <h3>Tehnici NLP compatibile</h3>
+  <div class="chip-row">
+    <span class="chip">Reframing</span>
+    <span class="chip">Ancorare</span>
+    <span class="chip">Schimbare de submodalități</span>
+    <span class="chip">Poziții perceptuale</span>
+    <span class="chip">Timeline</span>
+    <span class="chip">Vizualizare</span>
+    <span class="chip">Swish pattern</span>
+    <span class="chip">Parts integration</span>
+  </div>
+  <div class="quote">
+    „The question is not what is wrong, but what works."
+    <cite>— Insoo Kim Berg</cite>
+  </div>
+  <h3>Protocolul de cercetare folosit</h3>
+  <ul>
+    <li>4 participanți, câte 4 evaluări fiecare</li>
+    <li>Interval între evaluări: 2 săptămâni</li>
+    <li>Fiecare evaluare pe o temă diferită</li>
+    <li>Tip fișă: individuală (neasistat)</li>
+    <li>Date colectate în Google Sheets via webhook Make.com</li>
+  </ul>
+  <div class="cta-row">
+    <a href="fise-completate.html" class="btn btn-primary">Vezi fișele completate →</a>
+    <a href="fisa-individuala.html" class="btn btn-outline">Aplică metoda acum</a>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
